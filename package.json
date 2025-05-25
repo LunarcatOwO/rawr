@@ -1,0 +1,23 @@
+{
+  "name": "rawr",
+  "version": "1.0.0",
+  "description": "A discord bot",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LunarcatOwO/rawr.git"
+  },
+  "author": "LunarcatOwO",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/LunarcatOwO/rawr/issues"
+  },
+  "homepage": "https://github.com/LunarcatOwO/rawr#readme",
+  "dependencies": {
+    "discord.js": "^14.19.3"
+  }
+}
