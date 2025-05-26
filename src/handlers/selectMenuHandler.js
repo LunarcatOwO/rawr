@@ -3,8 +3,39 @@
  * Handles all select menu interactions from Discord components
  */
 
-async function handleSelectMenuInteraction(interaction) {
+async function handleSelectMenuInteraction(interaction, featureManager, showFeatureToggles, serverSettingsManager) {
     const { customId, values } = interaction;
+    
+    // Handle settings command toggle
+    if (customId === 'settings_toggle_command') {
+        const selectedValue = values[0];
+        
+        if (selectedValue.startsWith('toggle_')) {
+            const commandName = selectedValue.replace('toggle_', '');
+            const guildId = interaction.guild.id;
+            const userId = interaction.user.id;
+            
+            // Check if user can manage settings
+            if (!serverSettingsManager.canManageSettings(guildId, userId, interaction.guild)) {
+                await interaction.reply({
+                    content: '❌ Only the server owner or designated settings managers can toggle commands.',
+                    ephemeral: true
+                });
+                return;
+            }
+            
+            // Toggle the command
+            const wasDisabled = serverSettingsManager.isCommandDisabled(guildId, commandName);
+            serverSettingsManager.toggleCommand(guildId, commandName);
+            const action = wasDisabled ? 'enabled' : 'disabled';
+            
+            await interaction.reply({
+                content: `✅ Command \`${commandName}\` has been **${action}** for this server.`,
+                ephemeral: true
+            });
+            return;
+        }
+    }
     
     if (customId === 'help_categories') {
         const category = values[0];

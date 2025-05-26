@@ -36,6 +36,10 @@
       "enabled": true,
       "description": "Bot system commands"
     },
+    "settings": {
+      "enabled": true,
+      "description": "Server settings management for command control and permissions"
+    },
     "info": {
       "enabled": true,
       "description": "Get information about various topics"

@@ -23,7 +23,7 @@ module.exports = {
                             { name: 'status', value: 'status' },
                             { name: 'enable/disable features', value: 'feature_management' }
                         )))
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),    async execute(interaction, { loadCommands, deployCommands, featureManager }) {
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),    async execute(interaction, { loadCommands, deployCommands, featureManager, serverSettingsManager }) {
         // Debug logging
         console.log(`User ID: ${interaction.user.id}`);
         console.log(`Bot Owner ID: ${BOT_OWNER_ID}`);
@@ -45,10 +45,9 @@ module.exports = {
             switch (option) {
                 case 'reload_commands':
                     await interaction.deferReply({ ephemeral: true });
-                    
-                    try {
+                      try {
                         // Reload commands locally
-                        loadCommands();
+                        loadCommands(interaction.client, featureManager);
                         
                         // Deploy commands to Discord
                         const deployResult = await deployCommands();

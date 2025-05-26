@@ -14,13 +14,25 @@ async function handleModalSubmission(interaction) {
             content: `**Feedback Received!**\n**Title:** ${title}\n**Description:** ${description}\n\nThank you for your feedback!`,
             ephemeral: true
         });
-    }
-    else if (customId === 'announcement_modal') {
+    }    else if (customId === 'announcement_modal' || customId === 'announcement_modal_simple' || customId === 'announcement_modal_advanced') {
         const title = interaction.fields.getTextInputValue('announcement_title');
         const content = interaction.fields.getTextInputValue('announcement_content');
         
+        // Create a professional announcement embed
+        const { EmbedBuilder } = require('discord.js');
+        const embed = new EmbedBuilder()
+            .setTitle(`📢 ${title}`)
+            .setDescription(content)
+            .setColor(0x5865F2)
+            .setTimestamp()
+            .setFooter({ 
+                text: `Announcement by ${interaction.user.tag}`, 
+                iconURL: interaction.user.displayAvatarURL() 
+            });
+        
         await interaction.reply({
-            content: `**Announcement Created:**\n# ${title}\n${content}`,
+            content: '✅ **Announcement sent successfully!**',
+            embeds: [embed],
             ephemeral: false
         });
     }

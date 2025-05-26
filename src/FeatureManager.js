@@ -42,6 +42,10 @@ const DEFAULT_FEATURES =     {
                             "enabled": true,
                             "description": "Bot system commands"
                     },
+                    "settings": {
+                            "enabled": true,
+                            "description": "Server settings management for command control and permissions"
+                    },
                     "test": {
                             "enabled": true,
                             "description": "Make the bot say something"

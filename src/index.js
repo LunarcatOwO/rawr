@@ -3,6 +3,7 @@ require('dotenv').config();
 
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const FeatureManager = require('./FeatureManager');
+const ServerSettingsManager = require('./ServerSettingsManager');
 
 // Import handlers
 const { handleButtonInteraction } = require('./handlers/buttonHandler');
@@ -15,6 +16,7 @@ const { showFeatureToggles } = require('./utils/featureUtils');
 
 // Create feature manager instance
 const featureManager = new FeatureManager();
+const serverSettingsManager = new ServerSettingsManager();
 
 // Create a new client instance
 const client = new Client({
@@ -53,12 +55,19 @@ client.on('interactionCreate', async interaction => {
         if (!command) {
             console.error(`No command matching ${interaction.commandName} was found.`);
             return;
+        }        // Check if command is enabled by system admin (except for rawr and settings commands)
+        if (!['rawr', 'settings'].includes(interaction.commandName) && !featureManager.isCommandEnabled(interaction.commandName)) {
+            await interaction.reply({ 
+                content: '⚠️ This command is currently disabled by the system administrator.', 
+                ephemeral: true 
+            });
+            return;
         }
 
-        // Check if command is enabled (except for rawr sys commands)
-        if (interaction.commandName !== 'rawr' && !featureManager.isCommandEnabled(interaction.commandName)) {
+        // Check if command is disabled for this server (except for rawr and settings commands)
+        if (!['rawr', 'settings'].includes(interaction.commandName) && serverSettingsManager.isCommandDisabled(interaction.guild.id, interaction.commandName)) {
             await interaction.reply({ 
-                content: '⚠️ This command is currently disabled by the bot owner.', 
+                content: '⚠️ This command is currently disabled for this server. Contact a server administrator to enable it.', 
                 ephemeral: true 
             });
             return;
@@ -68,7 +77,13 @@ client.on('interactionCreate', async interaction => {
                 await command.execute(interaction, { 
                     loadCommands: () => loadCommands(client, featureManager), 
                     deployCommands: () => deployCommands(featureManager), 
-                    featureManager 
+                    featureManager,
+                    serverSettingsManager
+                });
+            } else if (interaction.commandName === 'settings') {
+                await command.execute(interaction, {
+                    serverSettingsManager,
+                    featureManager
                 });
             } else {
                 await command.execute(interaction);
@@ -114,7 +129,7 @@ client.on('interactionCreate', async interaction => {
                 });
                 return;
             }
-            await handleSelectMenuInteraction(interaction, featureManager, showFeatureToggles);
+            await handleSelectMenuInteraction(interaction, featureManager, showFeatureToggles, serverSettingsManager);
         } catch (error) {
             console.error('Select menu interaction error:', error);
             if (!interaction.replied && !interaction.deferred) {
