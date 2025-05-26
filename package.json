@@ -6,6 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "deploy": "node src/deploy-commands.js",
+    "register": "node src/register-commands.js",
+    "register-only": "node src/deploy-commands.js --register-only",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

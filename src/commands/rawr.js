@@ -4,7 +4,7 @@ const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 require('dotenv').config();
 
 // Bot owner user ID - replace with your Discord user ID
-const BOT_OWNER_ID = process.env.BOT_OWNER_ID || 'your_user_id_here';
+const BOT_OWNER_ID = process.env.BOT_OWNER_ID;
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -106,46 +106,85 @@ module.exports = {
                                 `**Ready:** ${interaction.client.isReady() ? 'Yes' : 'No'}`,
                         ephemeral: true                    });
                     break;
+                      case 'feature_management':
+                    const { ActionRowBuilder, StringSelectMenuBuilder, EmbedBuilder } = require('discord.js');
+                    const useEmbeds = featureManager.isFeatureEnabled('rich_embeds');
                     
-                case 'feature_management':
-                    const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder } = require('discord.js');
-                    
-                    const featureEmbed = new EmbedBuilder()
-                        .setTitle('🔧 Feature Management System')
-                        .setDescription('Select what you want to manage:')
-                        .addFields(
-                            { name: '🔘 Commands', value: 'Enable/disable individual bot commands', inline: true },
-                            { name: '⚙️ Features', value: 'Enable/disable bot features and functionality', inline: true },
-                            { name: '📊 Current Status', value: `Commands: ${featureManager.getStatus().commands.enabled}/${featureManager.getStatus().commands.total} enabled\nFeatures: ${featureManager.getStatus().features.enabled}/${featureManager.getStatus().features.total} enabled`, inline: false }
-                        )
-                        .setColor(0x9932CC)
-                        .setTimestamp();
-                    
-                    const featureSelect = new StringSelectMenuBuilder()
-                        .setCustomId('feature_management')
-                        .setPlaceholder('Choose what to manage...')
-                        .addOptions([
-                            {
-                                label: 'Manage Commands',
-                                description: 'Enable/disable individual bot commands',
-                                value: 'commands',
-                                emoji: '🔘'
-                            },
-                            {
-                                label: 'Manage Features',
-                                description: 'Enable/disable bot features and functionality',
-                                value: 'features',
-                                emoji: '⚙️'
-                            }
-                        ]);
-                    
-                    const featureRow = new ActionRowBuilder().addComponents(featureSelect);
-                    
-                    await interaction.reply({
-                        embeds: [featureEmbed],
-                        components: [featureRow],
-                        ephemeral: true
-                    });
+                    if (useEmbeds) {
+                        const featureEmbed = new EmbedBuilder()
+                            .setTitle('🔧 Feature Management System')
+                            .setDescription('Select what you want to manage:')
+                            .addFields(
+                                { name: '🔘 Commands', value: 'Enable/disable individual bot commands', inline: true },
+                                { name: '⚙️ Features', value: 'Enable/disable bot features and functionality', inline: true },
+                                { name: '📊 Current Status', value: `Commands: ${featureManager.getStatus().commands.enabled}/${featureManager.getStatus().commands.total} enabled\nFeatures: ${featureManager.getStatus().features.enabled}/${featureManager.getStatus().features.total} enabled`, inline: false }
+                            )
+                            .setColor(0x9932CC)
+                            .setTimestamp();
+                        
+                        const featureSelect = new StringSelectMenuBuilder()
+                            .setCustomId('feature_management')
+                            .setPlaceholder('Choose what to manage...')
+                            .addOptions([
+                                {
+                                    label: 'Manage Commands',
+                                    description: 'Enable/disable individual bot commands',
+                                    value: 'commands',
+                                    emoji: '🔘'
+                                },
+                                {
+                                    label: 'Manage Features',
+                                    description: 'Enable/disable bot features and functionality',
+                                    value: 'features',
+                                    emoji: '⚙️'
+                                }
+                            ]);
+                        
+                        const featureRow = new ActionRowBuilder().addComponents(featureSelect);
+                        
+                        await interaction.reply({
+                            embeds: [featureEmbed],
+                            components: [featureRow],
+                            ephemeral: true
+                        });
+                    } else {
+                        const status = featureManager.getStatus();
+                        let content = `### 🔧 **Feature Management System**\n`;
+                        content += `Manage bot commands and features through the interactive dashboard.\n\n`;
+                        content += `**Management Options:**\n`;
+                        content += `🔘 **Commands** - Enable/disable individual bot commands\n`;
+                        content += `⚙️ **Features** - Enable/disable bot features and functionality\n\n`;
+                        content += `**Current Status:**\n`;
+                        content += `📊 **Commands:** ${status.commands.enabled}/${status.commands.total} enabled\n`;
+                        content += `📊 **Features:** ${status.features.enabled}/${status.features.total} enabled\n\n`;
+                        content += `*Select what you want to manage from the dropdown below:*`;
+                        
+                        const featureSelect = new StringSelectMenuBuilder()
+                            .setCustomId('feature_management')
+                            .setPlaceholder('Choose what to manage...')
+                            .addOptions([
+                                {
+                                    label: 'Manage Commands',
+                                    description: 'Enable/disable individual bot commands',
+                                    value: 'commands',
+                                    emoji: '🔘'
+                                },
+                                {
+                                    label: 'Manage Features',
+                                    description: 'Enable/disable bot features and functionality',
+                                    value: 'features',
+                                    emoji: '⚙️'
+                                }
+                            ]);
+                        
+                        const featureRow = new ActionRowBuilder().addComponents(featureSelect);
+                        
+                        await interaction.reply({
+                            content: content,
+                            components: [featureRow],
+                            ephemeral: true
+                        });
+                    }
                     break;
                     
                 default:

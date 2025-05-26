@@ -27,6 +27,18 @@
     "announce": {
       "enabled": true,
       "description": "Modal-based announcement creation"
+    },
+    "hello": {
+      "enabled": true,
+      "description": "Says hello to you!"
+    },
+    "rawr": {
+      "enabled": true,
+      "description": "Bot system commands"
+    },
+    "info": {
+      "enabled": true,
+      "description": "Get information about various topics"
     }
   },
   "features": {
@@ -45,6 +57,10 @@
     "rich_embeds": {
       "enabled": true,
       "description": "Enhanced message formatting with embeds"
+    },
+    "component_ui": {
+      "enabled": true,
+      "description": "Modern component-based user interface with buttons and select menus"
     },
     "error_handling": {
       "enabled": true,
