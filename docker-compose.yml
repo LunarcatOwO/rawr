@@ -1,0 +1,21 @@
+services:
+  app:
+    image: ghcr.io/lunarcatowo/rawr:main
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - CLIENT_ID=${CLIENT_ID}
+      - BOT_OWNER_ID=${BOT_OWNER_ID}
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+      - "com.centurylinklabs.watchtower.scope=rawr"
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 60 --cleanup --rolling-restart --scope rawr --label-enable
+    restart: always
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=60
