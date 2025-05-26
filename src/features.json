@@ -1,0 +1,54 @@
+{
+  "commands": {
+    "ping": {
+      "enabled": true,
+      "description": "Bot latency testing with interactive buttons"
+    },
+    "user": {
+      "enabled": true,
+      "description": "User information with rich embeds and profiles"
+    },
+    "server": {
+      "enabled": true,
+      "description": "Server information and statistics"
+    },
+    "say": {
+      "enabled": true,
+      "description": "Make the bot speak messages"
+    },
+    "roll": {
+      "enabled": true,
+      "description": "Dice rolling with interactive buttons"
+    },
+    "components": {
+      "enabled": true,
+      "description": "Discord Components v2 showcase and demos"
+    },
+    "announce": {
+      "enabled": true,
+      "description": "Modal-based announcement creation"
+    }
+  },
+  "features": {
+    "auto_deploy": {
+      "enabled": true,
+      "description": "Automatically deploy commands on bot startup"
+    },
+    "component_interactions": {
+      "enabled": true,
+      "description": "Handle button and select menu interactions"
+    },
+    "modal_forms": {
+      "enabled": true,
+      "description": "Support for modal form submissions"
+    },
+    "rich_embeds": {
+      "enabled": true,
+      "description": "Enhanced message formatting with embeds"
+    },
+    "error_handling": {
+      "enabled": true,
+      "description": "Comprehensive error handling and user feedback"
+    }
+  }
+}
