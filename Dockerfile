@@ -13,4 +13,4 @@ COPY src/ ./src/
 ENV NODE_ENV=production
 
 # Start the application
-CMD ["node", "src/server/index.js"]
+CMD ["node", "src/index.js"]
